@@ -1,8 +1,15 @@
 # DSFMenuBuilder
 
-A description of this package.
+A ResultBuilder-style `NSMenu` creator for AppKit.
+
+## Why?
+
+I'd done this for [DSFAppKitBuilder](https://github.com/dagronf/DSFAppKitBuilder) and thought I'd pull it out into its
+own micro-framework and make it generic.
 
 ## tl;dr Show me something!
+
+Creates a menu with 'cut, copy, paste, separator, clear selection' with enablers
 
 ```swift
  let menu = Menu {
@@ -17,7 +24,7 @@ A description of this package.
        .onAction { [weak self] in /* perform paste action */ }
     Separator()
     MenuItem("Clear selection")
-       .onAction { [weak self] in /* clear the current selection */
+       .onAction { [weak self] in /* clear the current selection */ }
  }
 ```
 
@@ -57,48 +64,61 @@ A description of this package.
 </details>
 
 
-## MenuItem
+## Available meny item types
 
-### Properties
+### Separator
 
-#### showsHighlight
+A basic separator.
 
-If true, highlights the custom view as the mouse hovers over the item
+### MenuItem
+
+A standard menu item, providing
+
+* setting the title (`.title()`)
+* setting the enabled status (`.enabled()`)
+* setting the attributedTitle (`.attributedTitle()`)
+* setting the state (on, off, mixed) (`.state()`)
+* setting the indentation level (`.indentationLevel()`)
+* setting the NSUserInterfaceItemIdentifier identifier (`.identifier()`)
+* setting the basic image (`.image()`)
+* setting the state images (`.stateImage()`)
+
+### ViewItem
+
+A view item contains a custom view. The view can either come from an NSViewController or a SwiftUI view.
+
+The `ViewItem` inherits from `MenuItem` so it gets all the properties provided by `MenuItem`, and adds 
+
+* setting whether to highlight the custom view when the mouse hovers over the item (`.showsHighlight()`). Defaults to `true`
+
+#### NSViewController example
+
+**NOTE** If you are using AppKit, you must build your custom NSMenu views using autolayout
 
 ```swift
-func showsHighlight(_ showsHighlight: Bool) -> Self
+ViewItem("NSViewController menu item title", /* some NSViewController */)
 ```
 
-## ViewItem
-
-### NSView
-
+<details>
+<summary>NSViewController example</summary>
 
 
 
-### SwiftUI view
+</details>
 
-Integrating a SwiftUI view is straightforward, however getting values in and out
-of the view is a little more convoluted.
+#### SwiftUI View
 
 ```swift
 ViewItem("SwiftUI View menu item title", /* some SwiftUI view */)
 ```
 
-### Properties
-
-#### showsHighlight
-
-If true, highlights the custom view as the mouse hovers over the item
-
-```swift
-func showsHighlight(_ showsHighlight: Bool) -> Self
-```
-
-### Example
-
 <details>
-<summary>Example</summary>
+<summary>SwiftUI view example</summary>
+
+Integrating a SwiftUI view is straightforward, however getting values in and out
+of the view can get a little tricky.
+
+
 
 ```swift
 class SwiftUIModel {
@@ -145,3 +165,8 @@ let menu = NSMenu {
 ```
 
 </details>
+
+## Current limitations
+
+* Custom ViewItems using AppKit must (currently) use AutoLayout 
+

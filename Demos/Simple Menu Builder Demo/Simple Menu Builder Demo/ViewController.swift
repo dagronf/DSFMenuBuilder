@@ -13,6 +13,13 @@ import SwiftUI
 class ViewController: NSViewController {
 	@IBOutlet weak var popupButton: NSPopUpButton!
 
+	@IBOutlet var resultsTextView: NSTextView!
+
+	func writeOutput(_ string: String) {
+		let out = string + "\n"
+		resultsTextView.textStorage?.append(NSAttributedString(string: out, attributes: [.foregroundColor: NSColor.textColor]))
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -27,13 +34,13 @@ class ViewController: NSViewController {
 	}
 
 	let popupMenuItem = Menu {
-		MenuItem("Popup 1")
-		MenuItem("Popup 2")
-		MenuItem("Popup 3")
+		MenuItem("Popup 1").image(NSImage(named: "NSStatusAvailable")!)
+		MenuItem("Popup 2").image(NSImage(named: "NSStatusPartiallyAvailable")!)
+		MenuItem("Popup 3").image(NSImage(named: "NSStatusUnavailable")!)
 		ViewItem(
 			"SwiftUI (Go there)",
-			VStack(alignment: .leading, spacing: 4) {
-				Text("Using a SwiftUI view").frame(alignment: .leading)
+			VStack(alignment: .leading, spacing: 2) {
+				Text("Using a SwiftUI view").font(.caption).frame(alignment: .leading)
 				Text("Go there").frame(alignment: .leading)
 			}
 			.frame(maxWidth: .infinity)
@@ -42,13 +49,12 @@ class ViewController: NSViewController {
 		)
 	}
 
-
-	let createdMenu = Menu {
+	lazy var createdMenu = Menu {
 		MenuItem("Item 1")
 			.state { .mixed }
 		MenuItem("Item 2")
-			.onAction {
-				Swift.print("Indented 2 > Item 2 selected")
+			.onAction { [weak self] in
+				self?.writeOutput("Indented 2 > Item 2 selected")
 			}
 		MenuItem("Item 3")
 	}
@@ -106,8 +112,8 @@ class ViewController: NSViewController {
 
 			MenuItem("Simple menuitem selection")
 				.identifier(NSUserInterfaceItemIdentifier("boo"))
-				.onAction {
-					Swift.print("'Simple menuitem selection' selected!")
+				.onAction { [weak self] in
+					self?.writeOutput("'Simple menuitem selection' selected!")
 				}
 				.enabled { true }
 
@@ -117,7 +123,7 @@ class ViewController: NSViewController {
 				}
 				.onAction { [weak self] in
 					guard let unwrapped = self else { return }
-					Swift.print("'State changing menuitem' was selected")
+					self?.writeOutput("'State changing menuitem' was selected")
 					unwrapped.currentMenuItemState.toggle()
 				}
 
@@ -129,10 +135,19 @@ class ViewController: NSViewController {
 					return self?.currentMenuItemState ?? .off
 				}
 			MenuItem("Indented 2").indentationLevel(2)
-			MenuItem("Indented 3").indentationLevel(3).state { .on }.onAction {
-				Swift.print("'Indented 3' was selected")
+			MenuItem("Indented 3").indentationLevel(3).state { .on }.onAction { [weak self] in
+				self?.writeOutput("'Indented 3' was selected")
 			}
 			MenuItem("Indented 4").indentationLevel(4).state { .mixed }
+
+			Separator()
+
+			MenuItem("Selectable, image, submenu", subMenu: createdMenu)
+				.identifier("Selectable with submenu")
+				.image(NSImage(named: "NSColorPanel")!)
+				.onAction { [weak self] in
+					self?.writeOutput("'Selectable with submenu' was selected")
+				}
 
 			Separator()
 
@@ -153,7 +168,7 @@ class ViewController: NSViewController {
 						MenuItem("Level 131")
 						MenuItem("Level 132")
 						MenuItem("Level 133")
-							.onAction { Swift.print("Level 133 selected") }
+							.onAction { [weak self] in self?.writeOutput("Level 133 selected") }
 					}
 				}
 				MenuItem("Level 2") {
@@ -165,7 +180,7 @@ class ViewController: NSViewController {
 					MenuItem("Level 22") {
 						MenuItem("Level 221")
 						MenuItem("Level 222")
-							.onAction { Swift.print("Level 222 selected") }
+							.onAction { [weak self] in self?.writeOutput("Level 222 selected") }
 						MenuItem("Level 223")
 					}
 				}
@@ -174,18 +189,10 @@ class ViewController: NSViewController {
 
 			Separator()
 
-			MenuItem("Selectable with submenu", subMenu: createdMenu)
-				.identifier("Selectable with submenu")
-				.image(NSImage(systemSymbolName: "hare", accessibilityDescription: nil)!)
-				.onAction {
-					Swift.print("'Selectable with submenu' was selected")
-				}
-
-			Separator()
-
 			ViewItem("Custom NSView", self.customViewController)
-				.onAction {
-					Swift.print("Custom view was selected (value: \(self.customViewController.value))!")
+				.onAction { [weak self] in
+					guard let `self` = self else { return }
+					self.writeOutput("Custom view was selected (value: \(self.customViewController.value))!")
 				}
 				.enabled { true }
 				.state { .on }
@@ -204,8 +211,8 @@ class ViewController: NSViewController {
 					attributes: [.font: NSFont.userFixedPitchFont(ofSize: 16) as Any]
 				)
 			)
-			.onAction {
-				Swift.print("Attributed String item selected")
+			.onAction { [weak self] in
+				self?.writeOutput("Attributed String item selected")
 			}
 		}
 

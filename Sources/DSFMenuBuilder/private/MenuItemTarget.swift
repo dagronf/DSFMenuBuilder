@@ -28,6 +28,9 @@
 import AppKit
 import Foundation
 
+// A target instance for a menu item that handles enabling/state updates/title updates etc.
+//
+// Created and attached to the NSMenuItem's representedObject 
 class MenuItemTarget: NSObject, NSMenuItemValidation {
 	weak var menuItem: NSMenuItem?
 

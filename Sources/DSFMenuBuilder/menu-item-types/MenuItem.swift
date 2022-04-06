@@ -59,6 +59,12 @@ public class MenuItem: AnyMenuItem {
 		self.subMenu = subMenu
 	}
 
+	/// Create a menu item containing a submenu with the specified attributed title
+	public convenience init(_ attributedTitle: NSAttributedString, subMenu: Menu) {
+		self.init(attributedTitle)
+		self.subMenu = subMenu
+	}
+
 	// Private
 
 	// The submenu if the menu item has one
@@ -98,40 +104,45 @@ public extension MenuItem {
 public extension MenuItem {
 	/// A callback for retrieving the menu item enabled state when it is required for display.
 	///
-	/// This is useful when you have stored your Menu object as a property (rather than re-building it each time
-	/// it's required).
-	///
 	/// Example :-
 	///
 	/// ```swift
 	///  let menu = Menu {
 	///     MenuItem("Header")
-	///        .enabled { [weak self] in self?.myModel.headerEnabled ?? .off }
+	///        .action { … }
+	///        .enabled { [weak self] in
+	///            self?.isHeaderEnabled ?? .off
+	///        }
 	///     MenuItem("Footer")
-	///        .enabled { [weak self] in self?.myModel.footerEnabled ?? .off }
+	///        .action { … }
+	///        .enabled { [weak self] in
+	///           self?.isFooterEnabled ?? .off
+	///        }
 	///     MenuItem("Page")
+	///        .action { … }
 	///        .enabled { false }  // Always disabled
 	///  }
 	/// ```
 	func enabled(_ callback: @escaping () -> Bool) -> Self {
 		self.target.isEnabledCallback = callback
-		self.item.isEnabled = !callback()
+		self.item.isEnabled = callback()
 		return self
 	}
 
 	/// A callback for retrieving the menu item state when it is required for display.
-	///
-	/// This is useful when you have stored your Menu object as a property (rather than re-building it each time
-	/// it's required).
 	///
 	/// Example :-
 	///
 	/// ```swift
 	///  let menu = Menu {
 	///     MenuItem("Header")
-	///        .state { [weak self] in self?.myModel.headerState ?? .off }
+	///        .state { [weak self] in
+	///           self?.myModel.headerState ?? .off
+	///        }
 	///     MenuItem("Footer")
-	///        .state { [weak self] in self?.myModel.footerState ?? .off }
+	///        .state { [weak self] in
+	///           self?.myModel.footerState ?? .off
+	///        }
 	///  }
 	/// ```
 	func state(_ callback: @escaping () -> NSControl.StateValue) -> Self {
@@ -142,15 +153,14 @@ public extension MenuItem {
 
 	/// A callback for retrieving the menu item title when it is required for display.
 	///
-	/// This is useful when you have stored your Menu object as a property (rather than re-building it each time
-	/// it's required).
-	///
 	/// Example :-
 	///
 	/// ```swift
 	///  let menu = Menu {
 	///     MenuItem()
-	///        .title { [weak self] in self?.myModel.title ?? "" }
+	///        .title { [weak self] in
+	///           self?.model.title ?? "<err>"
+	///        }
 	///  }
 	/// ```
 	func title(_ callback: @escaping () -> String) -> Self {
@@ -159,6 +169,18 @@ public extension MenuItem {
 		return self
 	}
 
+	/// A callback for retrieving the menu item as an `NSAttributedString` when it is required for display.
+	///
+	/// Example :-
+	///
+	/// ```swift
+	///  let menu = Menu {
+	///     MenuItem()
+	///        .attributedTitle { [weak self] in
+	///            self?.model.attributedTitle ?? NSAttributedString()
+	///        }
+	///  }
+	/// ```
 	func attributedTitle(_ callback: @escaping () -> NSAttributedString) -> Self {
 		self.target.attributedTitleCallback = callback
 		self.item.attributedTitle = callback()

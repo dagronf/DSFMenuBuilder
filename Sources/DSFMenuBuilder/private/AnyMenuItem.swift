@@ -33,7 +33,7 @@ import Foundation
 /// You shouldn't really create instances of this directly. Use `MenuItem`, `ViewItem`, `Separator` instead.
 public class AnyMenuItem {
 	let item: NSMenuItem
-	init(item: NSMenuItem) {
+	internal init(item: NSMenuItem) {
 		self.item = item
 		self.item.representedObject = MenuItemTarget(item)
 	}
