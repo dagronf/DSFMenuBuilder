@@ -721,8 +721,26 @@
                                     <action selector="performClick:" target="XfG-lQ-9wD" id="b8k-e6-Drs"/>
                                 </connections>
                             </button>
+                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WkO-w2-dy9">
+                                <rect key="frame" x="49" y="39" width="162" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="XH0-Pa-tO5" id="BD3-nR-l2h">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="lQq-b9-Y92">
+                                        <items>
+                                            <menuItem title="Item 1" state="on" id="XH0-Pa-tO5"/>
+                                            <menuItem title="Item 2" id="OnP-Iu-3d4"/>
+                                            <menuItem title="Item 3" id="wsJ-Ts-K9v"/>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                            </popUpButton>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="popupButton" destination="WkO-w2-dy9" id="gUy-ym-HpX"/>
+                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>

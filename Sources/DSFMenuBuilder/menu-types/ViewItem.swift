@@ -24,10 +24,11 @@ public class ViewItem: MenuItem {
 	#if canImport(SwiftUI)
 	/// Create a new menu item that hosts a SwiftUI style view
 	@available(macOS 10.15, *)
-	public init<CustomView: View>(_ view: CustomView) {
+	public init<CustomView: View>(_ title: String, _ view: CustomView) {
 		super.init()
 		let wrapped = HostingViewController(view)
 		self.setup(viewController: wrapped)
+		self.item.title = title
 	}
 	#endif
 
@@ -71,6 +72,9 @@ open class ViewItemViewController: NSViewController {
 	// Override to react to enable changes
 	open func enableChanged(_ isEnabled: Bool) {}
 
+	// Override to react to state changes
+	open func stateChanged(_ state: NSControl.StateValue) {}
+
 //	deinit {
 //		Swift.print("ViewItemViewController deinit")
 //	}
@@ -94,6 +98,13 @@ open class ViewItemViewController: NSViewController {
 		didSet {
 			self.menuView.isEnabled = isEnabled
 			self.enableChanged(isEnabled)
+		}
+	}
+
+	// The current state of the menu item
+	internal var state: NSControl.StateValue = .off {
+		didSet {
+			self.stateChanged(self.state)
 		}
 	}
 }

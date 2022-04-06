@@ -96,6 +96,11 @@ class NSMenuItemHighlightableView: NSVisualEffectView {
 		super.mouseEntered(with: event)
 	}
 
+	override func mouseDragged(with event: NSEvent) {
+		self.material = (self.showsHighlight && self.isEnabled) ? .selection : .menu
+		super.mouseDragged(with: event)
+	}
+
 	override func mouseExited(with event: NSEvent) {
 		self.material = .menu
 		super.mouseExited(with: event)

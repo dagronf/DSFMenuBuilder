@@ -12,7 +12,17 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 	weak var menuItem: NSMenuItem?
 
 	// Set the action callback
-	var action: (() -> Void)?
+	var action: (() -> Void)? {
+		didSet {
+			if action != nil {
+				self.menuItem?.action = #selector(self.performAction(_:))
+			}
+			else {
+				self.menuItem?.action = nil
+			}
+		}
+	}
+
 	// Set the menu validation callback
 	var isDisabledCallback: (() -> Bool)?
 	// The callback to determine the menu's state.
@@ -23,11 +33,19 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 	// If the menu item is a view
 	var viewController: ViewItemViewController?
 
+	var handler: NSKeyValueObservation?
+
 	init(_ item: NSMenuItem) {
 		self.menuItem = item
 		super.init()
-		item.target = self
-		item.action = #selector(self.performAction(_:))
+		self.menuItem?.target = self
+
+
+		self.handler = item.observe(\.state, options: [.new]) { [weak self] target, change in
+			Swift.print("state change")
+			self?.viewController?.state = change.newValue ?? .off
+		}
+
 	}
 
 //	deinit {
