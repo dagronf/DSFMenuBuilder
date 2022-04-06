@@ -75,7 +75,7 @@ public class MenuItem: AnyMenuItem {
 public extension MenuItem {
 	/// The action callback for when the user selects the menu item.
 	///
-	/// By default, if an action is supplied it is automatically enabled. To disable, use the `disabled` callback.
+	/// By default, if an action is supplied it is automatically enabled. To disable, use the `enabled` modifier.
 	///
 	/// Example :-
 	///
@@ -106,15 +106,15 @@ public extension MenuItem {
 	/// ```swift
 	///  let menu = Menu {
 	///     MenuItem("Header")
-	///        .disabled { [weak self] in self?.myModel.headerEnabled ?? .off }
+	///        .enabled { [weak self] in self?.myModel.headerEnabled ?? .off }
 	///     MenuItem("Footer")
-	///        .disabled { [weak self] in self?.myModel.footerEnabled ?? .off }
+	///        .enabled { [weak self] in self?.myModel.footerEnabled ?? .off }
 	///     MenuItem("Page")
-	///        .disabled { true }  // Always disabled
+	///        .enabled { false }  // Always disabled
 	///  }
 	/// ```
-	func disabled(_ callback: @escaping () -> Bool) -> Self {
-		self.target.isDisabledCallback = callback
+	func enabled(_ callback: @escaping () -> Bool) -> Self {
+		self.target.isEnabledCallback = callback
 		self.item.isEnabled = !callback()
 		return self
 	}

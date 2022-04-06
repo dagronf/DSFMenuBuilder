@@ -44,7 +44,7 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 	}
 
 	// Set the menu validation callback
-	var isDisabledCallback: (() -> Bool)?
+	var isEnabledCallback: (() -> Bool)?
 	// The callback to determine the menu's state.
 	var stateCallback: (() -> NSControl.StateValue)?
 	// The callback to determine the menu's title.
@@ -82,9 +82,9 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 
 			// If there's a submenu, it should be handled differently
 			if let _ = self.menuItem?.submenu {
-				// 1. If there's a disabled callback, use it
-				if let isDisabled = self.isDisabledCallback {
-					let isEnabled = (isDisabled() == false)
+				// 1. If there's an enabled callback, use it
+				if let isEnabledCB = self.isEnabledCallback {
+					let isEnabled = isEnabledCB()
 					self.viewController?.isEnabled = isEnabled
 					return isEnabled
 				}
@@ -95,9 +95,9 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 			// If there's no action (and we don't have a submenu), then it's disabled
 			guard self.action != nil else { return false }
 
-			// If there's a callback for checking disabled status, use that to check for disabled status
-			if let isDisabled = self.isDisabledCallback {
-				let isEnabled = (isDisabled() == false)
+			// If there's a callback for checking enabled status, use that to check for enabled status
+			if let isEnabledCB = self.isEnabledCallback {
+				let isEnabled = isEnabledCB()
 				self.viewController?.isEnabled = isEnabled
 				return isEnabled
 			}
@@ -107,7 +107,7 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 			return true
 		}
 
-		return true
+		return false
 	}
 
 	@objc private func performAction(_ sender: NSMenuItem) {

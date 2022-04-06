@@ -109,7 +109,7 @@ class ViewController: NSViewController {
 				.onAction {
 					Swift.print("'Simple menuitem selection' selected!")
 				}
-				.disabled { false }
+				.enabled { true }
 
 			MenuItem("State changing menuitem")
 				.state { [weak self] in
@@ -143,7 +143,7 @@ class ViewController: NSViewController {
 						MenuItem("Level 112")
 						MenuItem("Level 113")
 					}
-					.disabled { false }
+					.enabled { false }
 					MenuItem("Level 12") {
 						MenuItem("Level 121")
 						MenuItem("Level 122")
@@ -187,7 +187,7 @@ class ViewController: NSViewController {
 				.onAction {
 					Swift.print("Custom view was selected (value: \(self.customViewController.value))!")
 				}
-				.disabled { false }
+				.enabled { true }
 				.state { .on }
 				.showsHighlight(true)
 

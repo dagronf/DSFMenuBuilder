@@ -7,13 +7,13 @@ A description of this package.
 ```swift
  let menu = Menu {
     MenuItem("Cut")
-       .disabled { [weak self] in self?.emptySelection() ?? true }
+       .enabled { [weak self] in self?.hasSelection() ?? false }
        .onAction { [weak self] in /* perform cut action */ }
     MenuItem("Copy")
-       .disabled { [weak self] in self?.emptySelection() ?? true }
+       .enabled { [weak self] in self?.hasSelection() ?? false }
        .onAction { [weak self] in /* perform copy action */ }
     MenuItem("Paste")
-       .disabled { [weak self] in self?.clipboardHasText() ?? true }
+       .enabled { [weak self] in self?.clipboardHasText() ?? false }
        .onAction { [weak self] in /* perform paste action */ }
     Separator()
     MenuItem("Clear selection")
