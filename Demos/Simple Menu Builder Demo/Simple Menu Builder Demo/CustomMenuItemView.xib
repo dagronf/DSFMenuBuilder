@@ -14,46 +14,67 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY">
-            <rect key="frame" x="0.0" y="0.0" width="212" height="31"/>
+            <rect key="frame" x="0.0" y="0.0" width="212" height="48"/>
             <subviews>
-                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="twM-89-yhO">
-                    <rect key="frame" x="16" y="5" width="180" height="21"/>
+                <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="2" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dj5-Ac-Grt">
+                    <rect key="frame" x="16" y="4" width="180" height="40"/>
                     <subviews>
-                        <levelIndicator verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="uxZ-OK-YKW">
-                            <rect key="frame" x="0.0" y="1" width="136" height="18"/>
-                            <constraints>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="tQQ-kE-Ti0"/>
-                            </constraints>
-                            <levelIndicatorCell key="cell" editable="YES" continuous="YES" alignment="left" doubleValue="25" maxValue="100" warningValue="80" criticalValue="95" levelIndicatorStyle="continuousCapacity" id="LaU-ef-0Dz"/>
-                            <connections>
-                                <binding destination="-2" name="enabled" keyPath="self.disabled" id="r2U-my-8K2">
-                                    <dictionary key="options">
-                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                    </dictionary>
-                                </binding>
-                                <binding destination="-2" name="value" keyPath="self.value" id="4i1-C1-VJI"/>
-                            </connections>
-                        </levelIndicator>
-                        <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Y6f-nc-u8d">
-                            <rect key="frame" x="140" y="1" width="40" height="19"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="40" id="U3Q-NR-pZn"/>
-                            </constraints>
-                            <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" drawsBackground="YES" id="4n9-bP-dI4">
-                                <numberFormatter key="formatter" formatterBehavior="custom10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" minimumFractionDigits="1" maximumFractionDigits="1" id="pW2-mM-gei"/>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eLx-d7-apt">
+                            <rect key="frame" x="-2" y="26" width="117" height="14"/>
+                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="Using an AppKit View" id="j3W-tP-kQH">
                                 <font key="font" metaFont="smallSystem"/>
-                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
-                            <connections>
-                                <binding destination="-2" name="enabled" keyPath="self.disabled" id="IX3-iS-G98">
-                                    <dictionary key="options">
-                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                    </dictionary>
-                                </binding>
-                                <binding destination="-2" name="value" keyPath="self.value" id="H1r-kw-rsG"/>
-                            </connections>
                         </textField>
+                        <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="twM-89-yhO">
+                            <rect key="frame" x="0.0" y="0.0" width="180" height="24"/>
+                            <subviews>
+                                <levelIndicator verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="uxZ-OK-YKW">
+                                    <rect key="frame" x="0.0" y="2" width="136" height="18"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="tQQ-kE-Ti0"/>
+                                    </constraints>
+                                    <levelIndicatorCell key="cell" editable="YES" continuous="YES" alignment="left" doubleValue="25" maxValue="100" warningValue="80" criticalValue="95" levelIndicatorStyle="continuousCapacity" id="LaU-ef-0Dz"/>
+                                    <connections>
+                                        <binding destination="-2" name="enabled" keyPath="self.disabled" id="r2U-my-8K2">
+                                            <dictionary key="options">
+                                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                            </dictionary>
+                                        </binding>
+                                        <binding destination="-2" name="value" keyPath="self.value" id="4i1-C1-VJI"/>
+                                    </connections>
+                                </levelIndicator>
+                                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Y6f-nc-u8d">
+                                    <rect key="frame" x="140" y="3" width="40" height="19"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="40" id="U3Q-NR-pZn"/>
+                                    </constraints>
+                                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" drawsBackground="YES" id="4n9-bP-dI4">
+                                        <numberFormatter key="formatter" formatterBehavior="custom10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" minimumFractionDigits="1" maximumFractionDigits="1" id="pW2-mM-gei"/>
+                                        <font key="font" metaFont="smallSystem"/>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                    <connections>
+                                        <binding destination="-2" name="enabled" keyPath="self.disabled" id="IX3-iS-G98">
+                                            <dictionary key="options">
+                                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                            </dictionary>
+                                        </binding>
+                                        <binding destination="-2" name="value" keyPath="self.value" id="H1r-kw-rsG"/>
+                                    </connections>
+                                </textField>
+                            </subviews>
+                            <visibilityPriorities>
+                                <integer value="1000"/>
+                                <integer value="1000"/>
+                            </visibilityPriorities>
+                            <customSpacing>
+                                <real value="3.4028234663852886e+38"/>
+                                <real value="3.4028234663852886e+38"/>
+                            </customSpacing>
+                        </stackView>
                     </subviews>
                     <visibilityPriorities>
                         <integer value="1000"/>
@@ -66,12 +87,12 @@
                 </stackView>
             </subviews>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="twM-89-yhO" secondAttribute="bottom" constant="5" id="Aio-TG-40a"/>
-                <constraint firstAttribute="trailing" secondItem="twM-89-yhO" secondAttribute="trailing" constant="16" id="ae6-NU-jfe"/>
-                <constraint firstItem="twM-89-yhO" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="16" id="sbD-ck-P4R"/>
-                <constraint firstItem="twM-89-yhO" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="5" id="xua-YW-H1S"/>
+                <constraint firstAttribute="trailing" secondItem="Dj5-Ac-Grt" secondAttribute="trailing" constant="16" id="Aoe-qL-68F"/>
+                <constraint firstItem="Dj5-Ac-Grt" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="4" id="Bt1-6k-jJH"/>
+                <constraint firstItem="Dj5-Ac-Grt" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="16" id="DPT-sn-z1x"/>
+                <constraint firstAttribute="bottom" secondItem="Dj5-Ac-Grt" secondAttribute="bottom" constant="4" id="XMm-gY-2Tr"/>
             </constraints>
-            <point key="canvasLocation" x="-10" y="45.5"/>
+            <point key="canvasLocation" x="-44" y="109"/>
         </customView>
     </objects>
 </document>

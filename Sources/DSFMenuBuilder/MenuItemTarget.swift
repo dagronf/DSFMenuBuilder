@@ -21,7 +21,7 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 	var titleCallback: (() -> MenuTitle)?
 
 	// If the menu item is a view
-	weak var viewController: ViewItemViewController?
+	var viewController: ViewItemViewController?
 
 	init(_ item: NSMenuItem) {
 		self.menuItem = item
@@ -29,6 +29,10 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 		item.target = self
 		item.action = #selector(self.performAction(_:))
 	}
+
+//	deinit {
+//		Swift.print("MenuItemTarget deinit")
+//	}
 
 	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		if self.menuItem === menuItem {
@@ -73,8 +77,4 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 	@objc private func performAction(_ sender: NSMenuItem) {
 		self.action?()
 	}
-
-//	deinit {
-//		Swift.print("MenuItemTarget deinit")
-//	}
 }
