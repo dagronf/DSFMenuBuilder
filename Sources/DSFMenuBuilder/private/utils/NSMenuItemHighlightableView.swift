@@ -35,7 +35,7 @@ import Foundation
 /// If you attach an NSView to an NSMenuItem, you are responsible for handling ALL the drawing
 /// events for the menu item, including hoveer coloring etc. This class can be used as the base
 /// view to provide the menu item background drawing
-class NSMenuItemHighlightableView: NSVisualEffectView {
+public class NSMenuItemHighlightableView: NSVisualEffectView {
 	@IBOutlet var parentMenuItem: NSMenuItem?
 	var isHighlighted = false {
 		didSet {
@@ -91,22 +91,22 @@ class NSMenuItemHighlightableView: NSVisualEffectView {
 		self.addTrackingArea(newTrackingArea)
 	}
 
-	override func mouseEntered(with event: NSEvent) {
+	public override func mouseEntered(with event: NSEvent) {
 		self.material = (self.showsHighlight && self.isEnabled) ? .selection : .menu
 		super.mouseEntered(with: event)
 	}
 
-	override func mouseDragged(with event: NSEvent) {
+	public override func mouseDragged(with event: NSEvent) {
 		self.material = (self.showsHighlight && self.isEnabled) ? .selection : .menu
 		super.mouseDragged(with: event)
 	}
 
-	override func mouseExited(with event: NSEvent) {
+	public override func mouseExited(with event: NSEvent) {
 		self.material = .menu
 		super.mouseExited(with: event)
 	}
 
-	override func mouseUp(with event: NSEvent) {
+	public override func mouseUp(with event: NSEvent) {
 		super.mouseUp(with: event)
 
 		guard let m = self.enclosingMenuItem?.menu else {

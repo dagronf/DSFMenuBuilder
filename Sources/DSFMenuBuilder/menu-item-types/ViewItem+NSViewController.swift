@@ -1,7 +1,7 @@
 //
-//  NSView+constraints.swift
+//  ViewItem+NSViewController.swift
 //
-//  Created by Darren Ford on 22/2/2022.
+//  Created by Darren Ford on 7/4/2022.
 //  Copyright © 2022 Darren Ford. All rights reserved.
 //
 //  MIT License
@@ -25,19 +25,29 @@
 //  SOFTWARE.
 //
 
-#if os(macOS)
-
 import AppKit
+import Foundation
 
-extension NSView {
-	/// Pin edges of this view to another view
-	func pinEdges(to other: NSView, offset: CGFloat = 0, animate: Bool = false) {
-		let which = animate ? self.animator() : self
-		which.leadingAnchor.constraint(equalTo: other.leadingAnchor, constant: offset).isActive = true
-		which.trailingAnchor.constraint(equalTo: other.trailingAnchor, constant: -offset).isActive = true
-		which.topAnchor.constraint(equalTo: other.topAnchor, constant: offset).isActive = true
-		which.bottomAnchor.constraint(equalTo: other.bottomAnchor, constant: -offset).isActive = true
-	}
+/// If your custom view needs to be able to react to menu item changes, conform
+/// your view's NSViewController to this protocol to receive menu updates.
+public protocol ViewControllerMenuActions {
+	func enabledChanged(_ enabled: Bool)
+	func stateChanged(_ state: NSControl.StateValue)
 }
 
-#endif
+public extension NSViewController {
+	/// Trigger the action for the ViewItem and dismiss the menu
+	func performActionForViewItemAndDismiss() {
+		if let menuItem = self.view.enclosingMenuItem,
+		   let menu = menuItem.menu
+		{
+			menu.performActionForItem(at: menu.index(of: menuItem))
+		}
+		self.dismissViewItem()
+	}
+
+	/// Dismiss the menu containing the ViewItem
+	func dismissViewItem() {
+		self.view.enclosingMenuItem?.menu?.cancelTracking()
+	}
+}

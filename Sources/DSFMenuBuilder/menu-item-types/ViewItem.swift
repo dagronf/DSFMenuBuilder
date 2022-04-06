@@ -34,36 +34,28 @@ import SwiftUI
 
 /// A menu item containing a custom view
 public class ViewItem: MenuItem {
-
-	/// Create a new menu item that hosts a NSView
+	/// Create a new menu item that hosts an NSView
 	/// - Parameters:
 	///   - title: The title to use for the menu item
 	///   - viewController: The view controller for the view to be displayed
 	///
 	/// A hosted view in a menu item requires a title so that for components that do custom handling
 	/// (eg. an NSPopoverButton) it can fall back to the simple title for display when needed
-	public init(_ title: String, _ viewController: ViewItem.ViewController) {
+	///
+	/// If your custom view needs to be able to react to menu item changes, conform your view's NSViewController
+	/// to the `ViewControllerMenuActions` protocol to receive menu item updates.
+	public init(_ title: String, _ viewController: NSViewController) {
 		super.init()
 		self.setup(viewController: viewController)
 		self.item.title = title
 	}
 
-	//	deinit {
-	//		Swift.print("ViewItem deinit")
-	//	}
+//	deinit {
+//		Swift.print("ViewItem deinit")
+//	}
 
 	// The view embedded within the menu item. The custom view will become a child of this view
 	private let core = NSMenuItemHighlightableView()
-}
-
-// MARK: Modifiers
-
-public extension ViewItem {
-	/// If true, displays a menu-style highlight under the custom view when the mouse pointer hovers over the menu item
-	func showsHighlight(_ showsHighlight: Bool) -> Self {
-		self.target.viewController?.showsHighlight = showsHighlight
-		return self
-	}
 }
 
 // MARK: SwiftUI
@@ -78,88 +70,48 @@ public extension ViewItem {
 	/// (eg. an NSPopoverButton) it can fall back to the simple title for display when needed
 	@available(macOS 10.15, *)
 	convenience init<CustomView: View>(_ title: String, _ view: CustomView) {
-		self.init(title, HostingViewController(view))
+		let vc = HostingViewController(view)
+		vc.view.translatesAutoresizingMaskIntoConstraints = false
+		self.init(title, vc)
 	}
 }
 
 private extension ViewItem {
-	func setup(viewController: ViewItem.ViewController) {
-		self.core.translatesAutoresizingMaskIntoConstraints = false
-		let customView = viewController.view
-		customView.translatesAutoresizingMaskIntoConstraints = false
-
-		// Add the custom view to the effect view, and pin within the effect container
-		self.core.addSubview(customView)
-		customView.pinEdges(to: self.core)
-
+	func setup(viewController: NSViewController) {
 		// Attach the effect view to the menuitem
-		self.item.view = self.core
+		self.item.view = viewController.view
 		self.target.viewController = viewController
 	}
 }
 
-// MARK: - ViewItemViewController
-
-extension ViewItem {
-
-	/// A custom view controller for hosting a view within a menu item
-	///
-	/// If you are creating a custom menu item view using NSViewController in Interface Builder,
-	/// you'll need to set the base class for the NSViewController object to `ViewItemViewController`
-	@objc(ViewItemViewController) open class ViewController: NSViewController {
-
-		/// Override to receive callbacks relating to the 'enabled' status of the view
-		open func enableChanged(_ isEnabled: Bool) {}
-
-		/// Override to receive callbacks relating to the 'state' status of the view
-		open func stateChanged(_ state: NSControl.StateValue) {}
-
-		//	deinit {
-		//		Swift.print("ViewItemViewController deinit")
-		//	}
-
-		// Private
-
-		// The menu highlighting view at the top level of the NSMenuItem
-		internal var menuView: NSMenuItemHighlightableView {
-			return self.view.superview as! NSMenuItemHighlightableView
-		}
-
-		// Does the view display a menu highlight underneath the view when the mouse is over the view?
-		internal var showsHighlight: Bool = true {
-			didSet {
-				self.menuView.showsHighlight = showsHighlight
-			}
-		}
-
-		// Enable or disable the view content.
-		internal var isEnabled: Bool = true {
-			didSet {
-				self.menuView.isEnabled = isEnabled
-				self.enableChanged(isEnabled)
-			}
-		}
-
-		// The current state of the menu item
-		internal var state: NSControl.StateValue = .off {
-			didSet {
-				self.stateChanged(self.state)
-			}
-		}
-	}
-}
-
 #if canImport(SwiftUI)
+
+
+
 @available(macOS 10.15, *)
-	private class HostingViewController<CustomView: View>: ViewItem.ViewController {
+private class HostingViewController<CustomView: View>: NSViewController {
 	let client: CustomView
 	override func loadView() {
-		self.view = NSHostingView(rootView: self.client)
+		let v = NSView()
+		v.translatesAutoresizingMaskIntoConstraints = false
+		let c = NSHostingView(rootView: self.client)
+		c.translatesAutoresizingMaskIntoConstraints = false
+
+		v.addSubview(c)
+		c.leadingAnchor.constraint(equalTo: v.leadingAnchor).isActive = true
+		c.trailingAnchor.constraint(equalTo: v.trailingAnchor).isActive = true
+		c.topAnchor.constraint(equalTo: v.topAnchor).isActive = true
+		c.bottomAnchor.constraint(equalTo: v.bottomAnchor).isActive = true
+
+		self.view = v
 	}
+
 	init(_ view: CustomView) {
 		self.client = view
 		super.init(nibName: nil, bundle: nil)
 	}
+
+	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}

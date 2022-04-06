@@ -1,31 +1,45 @@
 # DSFMenuBuilder
 
-A ResultBuilder-style `NSMenu` creator for AppKit.
+A SwiftUI-style DSL for generating `NSMenu` instances for AppKit.
+
+<p align="center">
+    <img src="https://img.shields.io/github/v/tag/dagronf/DSFMenuBuilder" />
+    <img src="https://img.shields.io/badge/macOS-10.11+-red" />
+    <img src="https://img.shields.io/badge/Swift-5.3-orange.svg" />
+    <a href="https://swift.org/package-manager">
+        <img src="https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" /></a>
+    <img src="https://img.shields.io/badge/License-MIT-lightgrey" />
+</p>
 
 ## Why?
 
-I'd done this for [DSFAppKitBuilder](https://github.com/dagronf/DSFAppKitBuilder) and thought I'd pull it out into its
-own micro-framework and make it generic.
+I'd done this for [DSFAppKitBuilder](https://github.com/dagronf/DSFAppKitBuilder) and thought I'd pull it out into its own micro-framework.
 
 ## tl;dr Show me something!
 
-Creates a menu with 'cut, copy, paste, separator, clear selection' with enablers
+Creates a menu with 'cut, copy, paste, separator, clear selection' with enablers and actions
 
 ```swift
- let menu = Menu {
+ let menu = NSMenu {
     MenuItem("Cut")
-       .enabled { [weak self] in self?.hasSelection() ?? false }
+       .enabled { [weak self] in self?.hasSelection ?? false }
        .onAction { [weak self] in /* perform cut action */ }
     MenuItem("Copy")
-       .enabled { [weak self] in self?.hasSelection() ?? false }
+       .enabled { [weak self] in self?.hasSelection ?? false }
        .onAction { [weak self] in /* perform copy action */ }
     MenuItem("Paste")
-       .enabled { [weak self] in self?.clipboardHasText() ?? false }
+       .enabled { [weak self] in self?.clipboardHasText ?? false }
        .onAction { [weak self] in /* perform paste action */ }
     Separator()
     MenuItem("Clear selection")
        .onAction { [weak self] in /* clear the current selection */ }
  }
+ 
+ menu.popUp(
+    positioning: nil,
+    at: .init(x: sender.bounds.minX, y: sender.bounds.maxY),
+    in: sender
+ )
 ```
 
 <details>
@@ -63,8 +77,7 @@ Creates a menu with 'cut, copy, paste, separator, clear selection' with enablers
 
 </details>
 
-
-## Available meny item types
+## Available menu item types
 
 ### Separator
 
@@ -88,24 +101,23 @@ A standard menu item, providing
 
 A view item contains a custom view. The view can either come from an NSViewController or a SwiftUI view.
 
-The `ViewItem` inherits from `MenuItem` so it gets all the properties provided by `MenuItem`, and adds 
-
-* setting whether to highlight the custom view when the mouse hovers over the item (`.showsHighlight()`). Defaults to `true`
+The `ViewItem` inherits from `MenuItem` so it gets all the properties provided by `MenuItem`
 
 #### NSViewController example
-
-**NOTE** If you are using AppKit, you must build your custom NSMenu views using autolayout
 
 ```swift
 ViewItem("NSViewController menu item title", /* some NSViewController */)
 ```
 
-<details>
-<summary>NSViewController example</summary>
+If you want to supply an action to a `ViewItem`, you'll need to manually trigger the action as part of your
+custom `NSViewController` instance
 
-
-
-</details>
+```swift
+override func mouseUp(with event: NSEvent) {
+   super.mouseUp(with: event)
+   self.performActionForViewItemAndDismiss()
+}
+```
 
 #### SwiftUI View
 
@@ -118,8 +130,6 @@ ViewItem("SwiftUI View menu item title", /* some SwiftUI view */)
 
 Integrating a SwiftUI view is straightforward, however getting values in and out
 of the view can get a little tricky.
-
-
 
 ```swift
 class SwiftUIModel {
@@ -167,6 +177,31 @@ let menu = NSMenu {
 
 </details>
 
-## Current limitations
+# License
 
-* Custom ViewItems using AppKit must (currently) use AutoLayout
+MIT. Use it for anything you want, just attribute my work if you do. Let me know if you do use it somewhere, I'd love to hear about it!
+
+```
+MIT License
+
+Copyright (c) 2022 Darren Ford
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+

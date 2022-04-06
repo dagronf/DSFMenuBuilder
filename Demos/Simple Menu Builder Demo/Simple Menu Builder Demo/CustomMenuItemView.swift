@@ -8,25 +8,29 @@
 import Cocoa
 import DSFMenuBuilder
 
-class CustomMenuItemView: ViewItem.ViewController {
-
+class CustomMenuItemView: NSViewController, ViewControllerMenuActions {
 	@objc dynamic var value: Double = 25
-	@objc dynamic var disabled: Bool = false
+	@objc dynamic var disabled = false
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do view setup here.
-    }
-
-	override func enableChanged(_ isEnabled: Bool) {
-		disabled = !isEnabled
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		// Do view setup here.
 	}
 
-	override func stateChanged(_ state: NSControl.StateValue) {
-		//Swift.print("CustomMenuItemView: menu item state is now \(state)")
+	deinit {
+		Swift.print("CustomMenuItemView deinit")
 	}
 
-//	deinit {
-//		Swift.print("CustomMenuItemView deinit")
-//	}
+	func enabledChanged(_ enabled: Bool) {
+		self.disabled = !enabled
+	}
+
+	func stateChanged(_ state: NSControl.StateValue) {}
+
+	override func mouseUp(with event: NSEvent) {
+		super.mouseUp(with: event)
+
+		// Dismiss the ViewItem
+		self.performActionForViewItemAndDismiss()
+	}
 }

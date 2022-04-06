@@ -109,6 +109,7 @@ class ViewController: NSViewController {
 	var currentMenuItemState = NSControl.StateValue.off
 
 	@IBAction func performClick(_ sender: NSButton) {
+
 		let menu = NSMenu {
 
 			MenuItem("Simple menuitem selection")
@@ -198,12 +199,13 @@ class ViewController: NSViewController {
 				}
 				.enabled { true }
 				.state { .on }
-				.showsHighlight(true)
 
 			Separator()
 
 			ViewItem("SwiftUI", SwiftUIMenuItemView(model: swiftUIModel))
-				.showsHighlight(false)
+				.onAction {
+					Swift.print("gooober")
+				}
 
 			Separator()
 
@@ -223,11 +225,6 @@ class ViewController: NSViewController {
 			at: .init(x: sender.bounds.minX, y: sender.bounds.maxY),
 			in: sender
 		)
-
-//		createdMenu.menu.popUp(
-//			 positioning: nil,
-//			 at: .init(x: sender.bounds.minX, y: sender.bounds.maxY),
-//			 in: sender)
 	}
 }
 
@@ -241,3 +238,40 @@ extension NSControl.StateValue {
 		}
 	}
 }
+
+
+// let m = CustomMenu()
+// m.display(sender: sender)
+//
+//class CustomMenu {
+//
+//	var hasSelection: Bool = false
+//	var hasClipboard: Bool = false
+//
+//	private lazy var menu = NSMenu {
+//		MenuItem("Cut")
+//			.enabled { [weak self] in self?.hasSelection ?? false }
+//			.onAction {  }
+//		MenuItem("Copy")
+//			.enabled { [weak self] in self?.hasSelection ?? false }
+//			.onAction {  }
+//		MenuItem("Paste")
+//			.enabled { [weak self] in self?.hasClipboard ?? false }
+//			.onAction {  }
+//		Separator()
+//		MenuItem("Clear selection")
+//			.onAction { [weak self] in /* clear the current selection */ }
+//	}
+//
+//	func display(sender: NSView) {
+//		menu.popUp(
+//			positioning: nil,
+//			at: .init(x: sender.bounds.minX, y: sender.bounds.maxY),
+//			in: sender
+//		)
+//	}
+//
+//	deinit {
+//		Swift.print("CustomMenu deinit")
+//	}
+//}

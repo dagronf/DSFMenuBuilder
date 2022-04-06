@@ -55,7 +55,7 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 	var attributedTitleCallback: (() -> NSAttributedString)?
 
 	// If the menu item is a view
-	var viewController: ViewItem.ViewController?
+	var viewController: NSViewController?
 
 	init(_ item: NSMenuItem) {
 		self.menuItem = item
@@ -69,6 +69,9 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 
 	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		if self.menuItem === menuItem {
+
+			let viewProtocol = self.viewController as? ViewControllerMenuActions
+
 			// Update the title if a callback is provided
 			if let title = self.titleCallback?() {
 				menuItem.title = title
@@ -80,7 +83,7 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 			// Update the state if a callback is provided
 			if let newState = self.stateCallback?() {
 				self.menuItem?.state = newState
-				self.viewController?.state = newState
+				viewProtocol?.stateChanged(newState)
 			}
 
 			// If there's a submenu, it should be handled differently
@@ -88,7 +91,7 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 				// 1. If there's an enabled callback, use it
 				if let isEnabledCB = self.isEnabledCallback {
 					let isEnabled = isEnabledCB()
-					self.viewController?.isEnabled = isEnabled
+					viewProtocol?.enabledChanged(isEnabled)
 					return isEnabled
 				}
 				// Otherwise, the submenu item is enabled
@@ -101,12 +104,12 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 			// If there's a callback for checking enabled status, use that to check for enabled status
 			if let isEnabledCB = self.isEnabledCallback {
 				let isEnabled = isEnabledCB()
-				self.viewController?.isEnabled = isEnabled
+				viewProtocol?.enabledChanged(isEnabled)
 				return isEnabled
 			}
 
 			// The menu has an action, therefore it's enabled
-			self.viewController?.isEnabled = true
+			viewProtocol?.enabledChanged(true)
 			return true
 		}
 
