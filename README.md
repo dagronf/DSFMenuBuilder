@@ -78,6 +78,7 @@ A standard menu item, providing
 * setting the enabled status (`.enabled()`)
 * setting the attributedTitle (`.attributedTitle()`)
 * setting the state (on, off, mixed) (`.state()`)
+* setting the shortcut key (`.shortcutKey()`)
 * setting the indentation level (`.indentationLevel()`)
 * setting the NSUserInterfaceItemIdentifier identifier (`.identifier()`)
 * setting the basic image (`.image()`)
@@ -168,5 +169,4 @@ let menu = NSMenu {
 
 ## Current limitations
 
-* Custom ViewItems using AppKit must (currently) use AutoLayout 
-
+* Custom ViewItems using AppKit must (currently) use AutoLayout

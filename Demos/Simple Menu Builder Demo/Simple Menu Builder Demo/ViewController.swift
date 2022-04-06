@@ -34,9 +34,9 @@ class ViewController: NSViewController {
 	}
 
 	let popupMenuItem = Menu {
-		MenuItem("Popup 1").image(NSImage(named: "NSStatusAvailable")!)
-		MenuItem("Popup 2").image(NSImage(named: "NSStatusPartiallyAvailable")!)
-		MenuItem("Popup 3").image(NSImage(named: "NSStatusUnavailable")!)
+		MenuItem("Popup 1").image(NSImage(named: "NSStatusAvailable")!).shortcutKey("1", modifiers: [.option])
+		MenuItem("Popup 2").image(NSImage(named: "NSStatusPartiallyAvailable")!).shortcutKey("2", modifiers: [.option])
+		MenuItem("Popup 3").image(NSImage(named: "NSStatusUnavailable")!).shortcutKey("3", modifiers: [.option])
 		ViewItem(
 			"SwiftUI (Go there)",
 			VStack(alignment: .leading, spacing: 2) {
@@ -47,6 +47,7 @@ class ViewController: NSViewController {
 			.padding(8)
 			.border(.red)
 		)
+		.shortcutKey("4", modifiers: [.option])
 	}
 
 	lazy var createdMenu = Menu {
@@ -118,6 +119,7 @@ class ViewController: NSViewController {
 				.enabled { true }
 
 			MenuItem("State changing menuitem")
+				.shortcutKey("m", modifiers: [.option, .command])
 				.state { [weak self] in
 					self?.currentMenuItemState ?? .off
 				}

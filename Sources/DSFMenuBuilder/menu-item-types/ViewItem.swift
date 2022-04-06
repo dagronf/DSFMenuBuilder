@@ -56,6 +56,18 @@ public class ViewItem: MenuItem {
 	private let core = NSMenuItemHighlightableView()
 }
 
+// MARK: Modifiers
+
+public extension ViewItem {
+	/// If true, displays a menu-style highlight under the custom view when the mouse pointer hovers over the menu item
+	func showsHighlight(_ showsHighlight: Bool) -> Self {
+		self.target.viewController?.showsHighlight = showsHighlight
+		return self
+	}
+}
+
+// MARK: SwiftUI
+
 public extension ViewItem {
 	/// Create a new menu item that hosts a SwiftUI view
 	/// - Parameters:
@@ -67,14 +79,6 @@ public extension ViewItem {
 	@available(macOS 10.15, *)
 	convenience init<CustomView: View>(_ title: String, _ view: CustomView) {
 		self.init(title, HostingViewController(view))
-	}
-}
-
-public extension ViewItem {
-	/// If true, displays a menu-style highlight under the custom view when the mouse pointer hovers over the menu item
-	func showsHighlight(_ showsHighlight: Bool) -> Self {
-		self.target.viewController?.showsHighlight = showsHighlight
-		return self
 	}
 }
 

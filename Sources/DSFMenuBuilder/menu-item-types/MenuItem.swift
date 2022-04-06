@@ -222,4 +222,15 @@ public extension MenuItem {
 		self.item.mixedStateImage = stateImage.mixedImage
 		return self
 	}
+
+	/// Set the menu item's shortcut key
+	/// - Parameters:
+	///   - key: The shortcut key character
+	///   - modifiers: The modifiers to apply to the character
+	/// - Returns: <#description#>
+	func shortcutKey(_ key: Character, modifiers: NSEvent.ModifierFlags) -> Self {
+		self.item.keyEquivalent = String(key)
+		self.item.keyEquivalentModifierMask = modifiers
+		return self
+	}
 }
