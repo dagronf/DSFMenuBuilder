@@ -26,6 +26,11 @@
                             </constraints>
                             <levelIndicatorCell key="cell" editable="YES" continuous="YES" alignment="left" doubleValue="25" maxValue="100" warningValue="80" criticalValue="95" levelIndicatorStyle="continuousCapacity" id="LaU-ef-0Dz"/>
                             <connections>
+                                <binding destination="-2" name="enabled" keyPath="self.disabled" id="r2U-my-8K2">
+                                    <dictionary key="options">
+                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                    </dictionary>
+                                </binding>
                                 <binding destination="-2" name="value" keyPath="self.value" id="4i1-C1-VJI"/>
                             </connections>
                         </levelIndicator>
@@ -41,6 +46,11 @@
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                             <connections>
+                                <binding destination="-2" name="enabled" keyPath="self.disabled" id="IX3-iS-G98">
+                                    <dictionary key="options">
+                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                    </dictionary>
+                                </binding>
                                 <binding destination="-2" name="value" keyPath="self.value" id="H1r-kw-rsG"/>
                             </connections>
                         </textField>

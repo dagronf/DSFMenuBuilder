@@ -20,8 +20,10 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 	// The callback to determine the menu's title.
 	var titleCallback: (() -> MenuTitle)?
 
+	// If the menu item is a view
+	weak var viewController: ViewItemViewController?
+
 	init(_ item: NSMenuItem) {
-		Swift.print("MenuItemTarget init")
 		self.menuItem = item
 		super.init()
 		item.target = self
@@ -42,7 +44,9 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 			if let _ = self.menuItem?.submenu {
 				// 1. If there's a disabled callback, use it
 				if let isDisabled = self.isDisabledCallback {
-					return isDisabled() == false
+					let isEnabled = (isDisabled() == false)
+					self.viewController?.isEnabled = isEnabled
+					return isEnabled
 				}
 				// Otherwise, the submenu item is enabled
 				return true
@@ -53,10 +57,13 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 
 			// If there's a callback for checking disabled status, use that to check for disabled status
 			if let isDisabled = self.isDisabledCallback {
-				return isDisabled() == false
+				let isEnabled = (isDisabled() == false)
+				self.viewController?.isEnabled = isEnabled
+				return isEnabled
 			}
 
 			// The menu has an action, therefore it's enabled
+			self.viewController?.isEnabled = true
 			return true
 		}
 
@@ -67,8 +74,7 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 		self.action?()
 	}
 
-	deinit {
-		Swift.print("MenuItemTarget deinit")
-		self.menuItem?.view = nil
-	}
+//	deinit {
+//		Swift.print("MenuItemTarget deinit")
+//	}
 }

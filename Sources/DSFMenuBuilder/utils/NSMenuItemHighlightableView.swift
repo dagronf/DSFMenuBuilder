@@ -48,6 +48,12 @@ class NSMenuItemHighlightableView: NSVisualEffectView {
 		}
 	}
 
+	// If true, shows the highlight bar under the view when the mouse is over the view
+	var showsHighlight: Bool = true
+
+	// Enable or disable the view
+	var isEnabled: Bool = true
+
 	private var trackingArea: NSTrackingArea?
 
 	override init(frame: NSRect) {
@@ -86,7 +92,7 @@ class NSMenuItemHighlightableView: NSVisualEffectView {
 	}
 
 	override func mouseEntered(with event: NSEvent) {
-		self.material = .selection
+		self.material = (self.showsHighlight && self.isEnabled) ? .selection : .menu
 		super.mouseEntered(with: event)
 	}
 

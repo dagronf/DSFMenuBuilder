@@ -95,8 +95,8 @@ public extension MenuItem {
 	}
 
 	/// The indentation level for the menu item
-	func indentationLevel(_ count: Int) -> Self {
-		self.item.indentationLevel = count
+	func indentationLevel(_ count: UInt) -> Self {
+		self.item.indentationLevel = Int(count)
 		return self
 	}
 }

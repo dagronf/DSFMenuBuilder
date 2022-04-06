@@ -34,30 +34,31 @@ class ViewController: NSViewController {
 
 	@IBAction func performClick(_ sender: NSButton) {
 		let menu = NSMenu {
-//			MenuItem("Caterpillar")
-//			Separator()
-//			MenuItem("Indented 1")
-//				.indentationLevel(1)
-//				.state { .on }
-//			MenuItem("Indented 2", subMenu: createdMenu)
-//				.identifier("Indented 2 menu item")
-//				.indentationLevel(1)
-//				.onAction {
-//					Swift.print("Indented 2 was selected")
-//				}
-//			Separator()
-			ViewItem(self.customViewController)
+			MenuItem("Caterpillar")
+			Separator()
+			MenuItem("Indented 1")
+				.indentationLevel(1)
+				.state { .on }
+			MenuItem("Indented 2", subMenu: createdMenu)
+				.identifier("Indented 2 menu item")
+				.indentationLevel(1)
+				.onAction {
+					Swift.print("Indented 2 was selected")
+				}
+			Separator()
+			ViewItem(CustomMenuItemView()) //self.customViewController)
 				.onAction {
 					Swift.print("Custom view was selected!")
 				}
-				.disabled { true }
-//			Separator()
-//			MenuItem("Noodle")
-//				.identifier(NSUserInterfaceItemIdentifier("boo"))
-//				.onAction {
-//					Swift.print("Got here!")
-//				}
-//				.disabled { false }
+				.disabled { false }
+				.showsHighlight(true)
+			Separator()
+			MenuItem("Noodle")
+				.identifier(NSUserInterfaceItemIdentifier("boo"))
+				.onAction {
+					Swift.print("Got here!")
+				}
+				.disabled { false }
 		}
 		menu.popUp(
 			positioning: nil,
