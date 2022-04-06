@@ -48,24 +48,16 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 	// The callback to determine the menu's state.
 	var stateCallback: (() -> NSControl.StateValue)?
 	// The callback to determine the menu's title.
-	var titleCallback: (() -> MenuTitle)?
+	var titleCallback: (() -> String)?
+	var attributedTitleCallback: (() -> NSAttributedString)?
 
 	// If the menu item is a view
-	var viewController: ViewItemViewController?
-
-	var handler: NSKeyValueObservation?
+	var viewController: ViewItem.ViewController?
 
 	init(_ item: NSMenuItem) {
 		self.menuItem = item
 		super.init()
 		self.menuItem?.target = self
-
-
-		self.handler = item.observe(\.state, options: [.new]) { [weak self] target, change in
-			Swift.print("state change")
-			self?.viewController?.state = change.newValue ?? .off
-		}
-
 	}
 
 //	deinit {
@@ -75,11 +67,17 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		if self.menuItem === menuItem {
 			// Update the title if a callback is provided
-			self.titleCallback?().updateItemTitle(menuItem)
+			if let title = self.titleCallback?() {
+				menuItem.title = title
+			}
+			if let attributedTitle = self.attributedTitleCallback?() {
+				menuItem.attributedTitle = attributedTitle
+			}
 
 			// Update the state if a callback is provided
 			if let newState = self.stateCallback?() {
 				self.menuItem?.state = newState
+				self.viewController?.state = newState
 			}
 
 			// If there's a submenu, it should be handled differently

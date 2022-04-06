@@ -30,6 +30,24 @@ import AppKit
 
 extension NSMenu {
 	/// Create an NSMenu using the specified Menu builder
+	///
+	/// A convenience method for creating an NSMenu directly from a `Menu` structure
+	///
+	/// Example :-
+	///
+	/// ```swift
+	///  let menu = NSMenu {
+	///     MenuItem("Item 1")
+	///     MenuItem("Item 2")
+	///     ...
+	///  }
+	///
+	///  menu.popUp(
+	///     positioning: nil,
+	///     at: .init(x: sender.bounds.minX, y: sender.bounds.maxY),
+	///     in: sender
+	///  )
+	/// ```
 	public convenience init(@NSMenuBuilder builder: () -> [NSMenuItem]) {
 		self.init()
 		self.removeAllItems()
@@ -46,7 +64,7 @@ public struct NSMenuBuilder {
 			if let sub = menuItem as? MenuItem,
 				let subMenu = sub.subMenu
 			{
-				result.submenu = subMenu.menu
+				result.submenu = subMenu.build()
 			}
 			return result
 		}

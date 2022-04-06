@@ -1,5 +1,5 @@
 //
-//  MenuTitle.swift
+//  AnyMenuItem.swift
 //
 //  Created by Darren Ford on 6/4/2022.
 //  Copyright © 2022 Darren Ford. All rights reserved.
@@ -28,29 +28,13 @@
 import AppKit
 import Foundation
 
-/// The menu item title
-public struct MenuTitle {
-	public let title: String?
-	public let attributedTitle: NSAttributedString?
-
-	/// Create a title object using a String
-	public init(_ title: String) {
-		self.title = title
-		self.attributedTitle = nil
-	}
-
-	/// Create a title object with an attributed string for the title
-	public init(_ attributedTitle: NSAttributedString) {
-		self.title = nil
-		self.attributedTitle = attributedTitle
-	}
-
-	@inlinable func updateItemTitle(_ menuItem: NSMenuItem) {
-		if let title = self.title {
-			menuItem.title = title
-		}
-		else if let title = self.attributedTitle {
-			menuItem.attributedTitle = title
-		}
+/// The base menu item type.
+///
+/// You shouldn't really create instances of this directly. Use `MenuItem`, `ViewItem`, `Separator` instead.
+public class AnyMenuItem {
+	let item: NSMenuItem
+	init(item: NSMenuItem) {
+		self.item = item
+		self.item.representedObject = MenuItemTarget(item)
 	}
 }

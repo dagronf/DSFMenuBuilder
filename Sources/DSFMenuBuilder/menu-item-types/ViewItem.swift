@@ -35,22 +35,18 @@ import SwiftUI
 /// A menu item containing a custom view
 public class ViewItem: MenuItem {
 
-	/// Create a new menu item containing a view
-	public init(_ viewController: ViewItemViewController) {
+	/// Create a new menu item that hosts a NSView
+	/// - Parameters:
+	///   - title: The title to use for the menu item
+	///   - viewController: The view controller for the view to be displayed
+	///
+	/// A hosted view in a menu item requires a title so that for components that do custom handling
+	/// (eg. an NSPopoverButton) it can fall back to the simple title for display when needed
+	public init(_ title: String, _ viewController: ViewItem.ViewController) {
 		super.init()
 		self.setup(viewController: viewController)
-	}
-
-	#if canImport(SwiftUI)
-	/// Create a new menu item that hosts a SwiftUI style view
-	@available(macOS 10.15, *)
-	public init<CustomView: View>(_ title: String, _ view: CustomView) {
-		super.init()
-		let wrapped = HostingViewController(view)
-		self.setup(viewController: wrapped)
 		self.item.title = title
 	}
-	#endif
 
 	//	deinit {
 	//		Swift.print("ViewItem deinit")
@@ -61,7 +57,21 @@ public class ViewItem: MenuItem {
 }
 
 public extension ViewItem {
-	/// Should the view show a menu-style highlight when the mouse pointer hovers over the item?
+	/// Create a new menu item that hosts a SwiftUI view
+	/// - Parameters:
+	///   - title: The title to use for the menu item
+	///   - view: The SwiftUI view to host within the menu item
+	///
+	/// A hosted view in a menu item requires a title so that for components that do custom handling
+	/// (eg. an NSPopoverButton) it can fall back to the simple title for display when needed
+	@available(macOS 10.15, *)
+	convenience init<CustomView: View>(_ title: String, _ view: CustomView) {
+		self.init(title, HostingViewController(view))
+	}
+}
+
+public extension ViewItem {
+	/// If true, displays a menu-style highlight under the custom view when the mouse pointer hovers over the menu item
 	func showsHighlight(_ showsHighlight: Bool) -> Self {
 		self.target.viewController?.showsHighlight = showsHighlight
 		return self
@@ -69,7 +79,7 @@ public extension ViewItem {
 }
 
 private extension ViewItem {
-	func setup(viewController: ViewItemViewController) {
+	func setup(viewController: ViewItem.ViewController) {
 		self.core.translatesAutoresizingMaskIntoConstraints = false
 		let customView = viewController.view
 		customView.translatesAutoresizingMaskIntoConstraints = false
@@ -84,54 +94,60 @@ private extension ViewItem {
 	}
 }
 
-/// A custom view controller for hosting a view within a menu item
-///
-/// You need to override this in your custom viewcontroller
-open class ViewItemViewController: NSViewController {
+// MARK: - ViewItemViewController
 
-	// Override to react to enable changes
-	open func enableChanged(_ isEnabled: Bool) {}
+extension ViewItem {
 
-	// Override to react to state changes
-	open func stateChanged(_ state: NSControl.StateValue) {}
+	/// A custom view controller for hosting a view within a menu item
+	///
+	/// If you are creating a custom menu item view using NSViewController in Interface Builder,
+	/// you'll need to set the base class for the NSViewController object to `ViewItemViewController`
+	@objc(ViewItemViewController) open class ViewController: NSViewController {
 
-//	deinit {
-//		Swift.print("ViewItemViewController deinit")
-//	}
+		/// Override to receive callbacks relating to the 'enabled' status of the view
+		open func enableChanged(_ isEnabled: Bool) {}
 
-	// Private
+		/// Override to receive callbacks relating to the 'state' status of the view
+		open func stateChanged(_ state: NSControl.StateValue) {}
 
-	// The menu highlighting view at the top level of the NSMenuItem
-	internal var menuView: NSMenuItemHighlightableView {
-		return self.view.superview as! NSMenuItemHighlightableView
-	}
+		//	deinit {
+		//		Swift.print("ViewItemViewController deinit")
+		//	}
 
-	// Does the view display a menu highlight underneath the view when the mouse is over the view?
-	internal var showsHighlight: Bool = true {
-		didSet {
-			self.menuView.showsHighlight = showsHighlight
+		// Private
+
+		// The menu highlighting view at the top level of the NSMenuItem
+		internal var menuView: NSMenuItemHighlightableView {
+			return self.view.superview as! NSMenuItemHighlightableView
 		}
-	}
 
-	// Enable or disable the view content.
-	internal var isEnabled: Bool = true {
-		didSet {
-			self.menuView.isEnabled = isEnabled
-			self.enableChanged(isEnabled)
+		// Does the view display a menu highlight underneath the view when the mouse is over the view?
+		internal var showsHighlight: Bool = true {
+			didSet {
+				self.menuView.showsHighlight = showsHighlight
+			}
 		}
-	}
 
-	// The current state of the menu item
-	internal var state: NSControl.StateValue = .off {
-		didSet {
-			self.stateChanged(self.state)
+		// Enable or disable the view content.
+		internal var isEnabled: Bool = true {
+			didSet {
+				self.menuView.isEnabled = isEnabled
+				self.enableChanged(isEnabled)
+			}
+		}
+
+		// The current state of the menu item
+		internal var state: NSControl.StateValue = .off {
+			didSet {
+				self.stateChanged(self.state)
+			}
 		}
 	}
 }
 
 #if canImport(SwiftUI)
 @available(macOS 10.15, *)
-private class HostingViewController<CustomView: View>: ViewItemViewController {
+	private class HostingViewController<CustomView: View>: ViewItem.ViewController {
 	let client: CustomView
 	override func loadView() {
 		self.view = NSHostingView(rootView: self.client)

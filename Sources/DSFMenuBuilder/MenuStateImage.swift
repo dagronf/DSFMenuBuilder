@@ -34,7 +34,11 @@ public struct MenuStateImage {
 	let offImage: NSImage?
 	let mixedImage: NSImage?
 
-	/// Create a collection of state images
+	/// Create a collection of state images to be used for a menu item
+	/// - Parameters:
+	///   - on: The image to use for the 'on' state of the menu item. If nil, no image is displayed
+	///   - off: The image to use for the 'off' state of the menu item. If nil, no image is displayed
+	///   - mixed: The image to use for the 'mixed' state of the menu item. If nil, no image is displayed
 	public init(on: NSImage? = nil, off: NSImage? = nil, mixed: NSImage? = nil) {
 		self.onImage = on
 		self.offImage = off

@@ -26,28 +26,47 @@
 import AppKit
 
 /// A representation of a menu
+///
+/// ```swift
+///  // Build a context menu
+///  let contextMenu = Menu {
+///     MenuItem("Increase Level")
+///        .onAction { /* increase levels */ }
+///     MenuItem("Decrease Level")
+///        .onAction { /* decrease levels */ }
+///  }
+/// ```
 public class Menu {
-	var menuItems: [AnyMenuItem] = []
+	/// Create a Menu object using the specified builder
+	public init(@MenuBuilder builder: () -> [AnyMenuItem]) {
+		self.menuItems = builder()
+	}
 
 	/// Generate an NSMenu representation of the Menu structure
 	public var menu: NSMenu {
 		return self.build()
 	}
 
-	/// Create a Menu object using the specified builder
-	public init(@MenuBuilder builder: () -> [AnyMenuItem]) {
-		self.menuItems = builder()
-	}
+	// Private
 
-	private func build() -> NSMenu {
-		let m = NSMenu()
-		m.items = menuItems.map { $0.item }
-		return m
-	}
+	private var menuItems: [AnyMenuItem] = []
 }
 
-
-// MARK: - Builders
+internal extension Menu {
+	func build() -> NSMenu {
+		let menu = NSMenu()
+		self.menuItems.forEach { item in
+			menu.addItem(item.item)
+			if let sub = item as? MenuItem,
+				let subMenu = sub.subMenu
+			{
+				let sm = subMenu.build()
+				item.item.submenu = sm
+			}
+		}
+		return menu
+	}
+}
 
 /// A menu builder object
 @resultBuilder

@@ -38,13 +38,13 @@ public class MenuItem: AnyMenuItem {
 	/// Create a menu item with a simple title
 	public init(_ title: String) {
 		super.init(item: NSMenuItem())
-		MenuTitle(title).updateItemTitle(self.item)
+		self.item.title = title
 	}
 
 	/// Create a menu item with an attributed string for the title
 	public init(_ attributedTitle: NSAttributedString) {
 		super.init(item: NSMenuItem())
-		MenuTitle(attributedTitle).updateItemTitle(self.item)
+		self.item.attributedTitle = attributedTitle
 	}
 
 	/// Create a menu item with a submenu builder
@@ -70,36 +70,98 @@ public class MenuItem: AnyMenuItem {
 	}
 }
 
-// MARK: - Modifiers
+// MARK: - Actions
 
 public extension MenuItem {
-	/// The action callback for the menu item.
+	/// The action callback for when the user selects the menu item.
 	///
 	/// By default, if an action is supplied it is automatically enabled. To disable, use the `disabled` callback.
-	/// If there's no action or the 'disabled' block returns 'true' then the item is disabled
+	///
+	/// Example :-
+	///
+	/// ```swift
+	///  let menu = Menu {
+	///     MenuItem("Tile Left")
+	///        .onAction { [weak self] in /* Tile the windows to the left */ }
+	///     MenuItem("Tile Right")
+	///        .onAction { [weak self] in /* Tile the windows to the right */ }
+	///  }
+	/// ```
 	func onAction(_ callback: @escaping () -> Void) -> Self {
 		self.target.action = callback
 		return self
 	}
+}
 
-	/// Set the block used to determine whether the menu item is enabled/disabled
+// MARK: - Modifiers
+
+public extension MenuItem {
+	/// A callback for retrieving the menu item enabled state when it is required for display.
+	///
+	/// This is useful when you have stored your Menu object as a property (rather than re-building it each time
+	/// it's required).
+	///
+	/// Example :-
+	///
+	/// ```swift
+	///  let menu = Menu {
+	///     MenuItem("Header")
+	///        .disabled { [weak self] in self?.myModel.headerEnabled ?? .off }
+	///     MenuItem("Footer")
+	///        .disabled { [weak self] in self?.myModel.footerEnabled ?? .off }
+	///     MenuItem("Page")
+	///        .disabled { true }  // Always disabled
+	///  }
+	/// ```
 	func disabled(_ callback: @escaping () -> Bool) -> Self {
 		self.target.isDisabledCallback = callback
 		self.item.isEnabled = !callback()
 		return self
 	}
 
-	/// Set the block used to determine the state of the menu item
+	/// A callback for retrieving the menu item state when it is required for display.
+	///
+	/// This is useful when you have stored your Menu object as a property (rather than re-building it each time
+	/// it's required).
+	///
+	/// Example :-
+	///
+	/// ```swift
+	///  let menu = Menu {
+	///     MenuItem("Header")
+	///        .state { [weak self] in self?.myModel.headerState ?? .off }
+	///     MenuItem("Footer")
+	///        .state { [weak self] in self?.myModel.footerState ?? .off }
+	///  }
+	/// ```
 	func state(_ callback: @escaping () -> NSControl.StateValue) -> Self {
 		self.target.stateCallback = callback
 		self.item.state = callback()
 		return self
 	}
 
-	/// The title for the menu item
-	func title(_ callback: @escaping () -> MenuTitle) -> Self {
+	/// A callback for retrieving the menu item title when it is required for display.
+	///
+	/// This is useful when you have stored your Menu object as a property (rather than re-building it each time
+	/// it's required).
+	///
+	/// Example :-
+	///
+	/// ```swift
+	///  let menu = Menu {
+	///     MenuItem()
+	///        .title { [weak self] in self?.myModel.title ?? "" }
+	///  }
+	/// ```
+	func title(_ callback: @escaping () -> String) -> Self {
 		self.target.titleCallback = callback
-		callback().updateItemTitle(self.item)
+		self.item.title = callback()
+		return self
+	}
+
+	func attributedTitle(_ callback: @escaping () -> NSAttributedString) -> Self {
+		self.target.attributedTitleCallback = callback
+		self.item.attributedTitle = callback()
 		return self
 	}
 }
@@ -113,7 +175,7 @@ public extension MenuItem {
 		return self
 	}
 
-	/// The identifier for the menu item
+	/// The convenience identifier for the menu item
 	func identifier(_ identifier: String) -> Self {
 		self.item.identifier = NSUserInterfaceItemIdentifier(identifier)
 		return self

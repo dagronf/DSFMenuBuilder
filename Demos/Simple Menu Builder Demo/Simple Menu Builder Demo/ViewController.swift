@@ -55,16 +55,40 @@ class ViewController: NSViewController {
 
 	let customViewController = CustomMenuItemView()
 
+	//
 	// Custom swiftui view
+	//
+	class SwiftUIModel {
+		var doubleValue: Double = 20
+	}
+	let swiftUIModel = SwiftUIModel()
 	struct SwiftUIMenuItemView: View {
-		@State var value: Double = 20
+		let model: SwiftUIModel
+		@State var currentValue: Double
+
+		init(model: SwiftUIModel) {
+			self.model = model
+			currentValue = model.doubleValue
+		}
+
 		var body: some View {
+
+			let valueBinding = Binding<Double>(
+				get: {
+					self.currentValue
+				},
+				set: {
+					self.currentValue = $0
+					self.model.doubleValue = $0
+				}
+			)
+
 			VStack(alignment: .leading, spacing: 0) {
 				Text("Using a SwiftUI view").font(.callout)
 				HStack {
-					Slider(value: $value, in: 0 ... 100).controlSize(.small)
+					Slider(value: valueBinding, in: 0 ... 100).controlSize(.small)
 						.frame(maxWidth: .infinity)
-					Text("\(value, specifier: "%.1f")")
+					Text("\(currentValue, specifier: "%.1f")")
 						.frame(maxWidth: 38)
 				}
 			}
@@ -72,59 +96,117 @@ class ViewController: NSViewController {
 		}
 	}
 
-	var caterpillarSelection = NSControl.StateValue.off
+	//
+	// State handling demo
+	//
+	var currentMenuItemState = NSControl.StateValue.off
 
 	@IBAction func performClick(_ sender: NSButton) {
 		let menu = NSMenu {
-			MenuItem("Caterpillar")
+
+			MenuItem("Simple menuitem selection")
+				.identifier(NSUserInterfaceItemIdentifier("boo"))
+				.onAction {
+					Swift.print("'Simple menuitem selection' selected!")
+				}
+				.disabled { false }
+
+			MenuItem("State changing menuitem")
 				.state { [weak self] in
-					self?.caterpillarSelection ?? .off
+					self?.currentMenuItemState ?? .off
 				}
 				.onAction { [weak self] in
 					guard let unwrapped = self else { return }
-					Swift.print("Caterpillar was selected")
-					unwrapped.caterpillarSelection.toggle()
+					Swift.print("'State changing menuitem' was selected")
+					unwrapped.currentMenuItemState.toggle()
 				}
+
 			Separator()
-			MenuItem("Indented 1")
-				.indentationLevel(1)
+
+			MenuItem("Indented 0").indentationLevel(0)
+			MenuItem("Indented 1").indentationLevel(1)
 				.state { [weak self] in
-					return self?.caterpillarSelection ?? .off
+					return self?.currentMenuItemState ?? .off
 				}
+			MenuItem("Indented 2").indentationLevel(2)
+			MenuItem("Indented 3").indentationLevel(3).state { .on }.onAction {
+				Swift.print("'Indented 3' was selected")
+			}
+			MenuItem("Indented 4").indentationLevel(4).state { .mixed }
 
 			Separator()
 
-			MenuItem("Indented 2", subMenu: createdMenu)
-				.identifier("Indented 2 menu item")
+			MenuItem("Multiple Levels") {
+				MenuItem("Level 1") {
+					MenuItem("Level 11") {
+						MenuItem("Level 111")
+						MenuItem("Level 112")
+						MenuItem("Level 113")
+					}
+					.disabled { false }
+					MenuItem("Level 12") {
+						MenuItem("Level 121")
+						MenuItem("Level 122")
+						MenuItem("Level 123")
+					}
+					MenuItem("Level 13") {
+						MenuItem("Level 131")
+						MenuItem("Level 132")
+						MenuItem("Level 133")
+							.onAction { Swift.print("Level 133 selected") }
+					}
+				}
+				MenuItem("Level 2") {
+					MenuItem("Level 21") {
+						MenuItem("Level 211")
+						MenuItem("Level 212")
+						MenuItem("Level 213")
+					}
+					MenuItem("Level 22") {
+						MenuItem("Level 221")
+						MenuItem("Level 222")
+							.onAction { Swift.print("Level 222 selected") }
+						MenuItem("Level 223")
+					}
+				}
+				MenuItem("Level 3")
+			}
+
+			Separator()
+
+			MenuItem("Selectable with submenu", subMenu: createdMenu)
+				.identifier("Selectable with submenu")
 				.image(NSImage(systemSymbolName: "hare", accessibilityDescription: nil)!)
 				.onAction {
-					Swift.print("Indented 2 was selected")
+					Swift.print("'Selectable with submenu' was selected")
 				}
 
 			Separator()
 
-			ViewItem(self.customViewController)
+			ViewItem("Custom NSView", self.customViewController)
 				.onAction {
 					Swift.print("Custom view was selected (value: \(self.customViewController.value))!")
 				}
 				.disabled { false }
+				.state { .on }
 				.showsHighlight(true)
 
 			Separator()
 
-			MenuItem("Noodle")
-				.identifier(NSUserInterfaceItemIdentifier("boo"))
-				.onAction {
-					Swift.print("Noodle selected!")
-				}
-				.disabled { false }
+			ViewItem("SwiftUI", SwiftUIMenuItemView(model: swiftUIModel))
+				.showsHighlight(false)
 
 			Separator()
 
-			ViewItem("SwiftUI", SwiftUIMenuItemView())
-				.onAction {
-					Swift.print("SwiftUI menu item selected")
-				}
+			MenuItem(
+				NSAttributedString(
+					string: "Attributed String",
+					attributes: [.font: NSFont.userFixedPitchFont(ofSize: 16) as Any]
+				)
+			)
+			.onAction {
+				Swift.print("Attributed String item selected")
+			}
 		}
 
 		menu.popUp(
