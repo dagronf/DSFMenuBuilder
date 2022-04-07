@@ -233,4 +233,10 @@ public extension MenuItem {
 		self.item.keyEquivalentModifierMask = modifiers
 		return self
 	}
+
+	/// Set the menu item's tag
+	func tag(_ tag: Int) -> Self {
+		self.item.tag = tag
+		return self
+	}
 }
