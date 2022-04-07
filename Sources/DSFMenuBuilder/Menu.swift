@@ -42,6 +42,11 @@ public class Menu {
 		self.menuItems = builder()
 	}
 
+	/// Create a Menu object using the specified menu items
+	public init(content: [AnyMenuItem]) {
+		self.menuItems = content
+	}
+
 	/// Generate an NSMenu representation of the Menu structure
 	public var menu: NSMenu {
 		return self.build()
