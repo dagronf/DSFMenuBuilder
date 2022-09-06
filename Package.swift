@@ -4,27 +4,32 @@
 import PackageDescription
 
 let package = Package(
-    name: "DSFMenuBuilder",
-	 platforms: [
-		 .macOS(.v10_11),
-	 ],
-    products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
-        .library(
-            name: "DSFMenuBuilder",
-            targets: ["DSFMenuBuilder"]),
-    ],
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-    ],
-    targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
-        .target(
-            name: "DSFMenuBuilder",
-				dependencies: []),
-        .testTarget(
-            name: "DSFMenuBuilderTests",
-            dependencies: ["DSFMenuBuilder"]),
-    ]
+	name: "DSFMenuBuilder",
+	platforms: [
+		.macOS(.v10_11),
+	],
+	products: [
+		.library(
+			name: "DSFMenuBuilder",
+			type: .static,
+			targets: ["DSFMenuBuilder"]
+		),
+		.library(
+			name: "DSFMenuBuilderDynamic",
+			type: .dynamic,
+			targets: ["DSFMenuBuilder"]
+		),
+	],
+	dependencies: [
+	],
+	targets: [
+		.target(
+			name: "DSFMenuBuilder",
+			dependencies: []
+		),
+		.testTarget(
+			name: "DSFMenuBuilderTests",
+			dependencies: ["DSFMenuBuilder"]
+		),
+	]
 )

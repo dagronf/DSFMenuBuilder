@@ -97,6 +97,23 @@ A standard menu item, providing
 * setting the basic image (`.image()`)
 * setting the state images (`.stateImage()`)
 
+### MenuCollection
+
+The `MenuCollection` menu item is a mechanism for repeating a menu item for a collection of items.
+For example, you might have a collection of names to add to a menu, you can use a `MenuCollection` object
+to iterate over the collection and generate a series of menu items for each collection item.
+
+```swift
+ MenuCollection(1...4) { [weak self] item in
+    MenuItem("Item \(item)")
+       .tag(item)
+       .onAction {
+          Swift.print("\(item)")
+       }
+    Separator()
+ }
+```
+
 ### ViewItem
 
 A view item contains a custom view. The view can either come from an NSViewController or a SwiftUI view.

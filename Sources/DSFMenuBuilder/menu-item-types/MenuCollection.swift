@@ -1,5 +1,5 @@
 //
-//  SeparatorItem.swift
+//  MenuCollection.swift
 //
 //  Copyright © 2022 Darren Ford. All rights reserved.
 //
@@ -27,10 +27,37 @@
 import AppKit
 import Foundation
 
-/// A menu item separator
-public class Separator: AnyMenuItem {
-	/// Create a separator menu item
-	public init() {
-		super.init(item: NSMenuItem.separator())
+/// A menu item that builds menu items using a menu template structure.
+///
+/// Example :-
+///
+/// ```swift
+/// let menu = Menu {
+///    MenuCollection(1...4) { item in
+///       MenuItem("Item \(item)")
+///          .tag(item)
+///          .onAction {
+///             Swift.print("User selected \(item)")
+///          }
+///       Separator()
+///    }
+/// }
+/// ```
+public class MenuCollection: AnyMenuItem {
+	internal let items: [AnyMenuItem]
+	/// Create a menu collection item
+	/// - Parameters:
+	///   - elements: The sequence of items to add
+	///   - builder: The menu template to use for each item in the elements sequence
+	public init<ItemContainerType: Sequence>(
+		_ elements: ItemContainerType,
+		@MenuBuilder builder: (ItemContainerType.Element) -> [AnyMenuItem]
+	) {
+		var results: [AnyMenuItem] = []
+		for item in elements {
+			results.append(contentsOf: builder(item))
+		}
+		self.items = results
+		super.init(item: NSMenuItem())
 	}
 }

@@ -1,28 +1,27 @@
 //
 //  MenuItemTarget.swift
 //
-//  Created by Darren Ford on 6/4/2022.
 //  Copyright © 2022 Darren Ford. All rights reserved.
 //
-//  MIT License
+//  MIT license
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
 //
-//  The above copyright notice and this permission notice shall be included in all
-//  copies or substantial portions of the Software.
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
 //
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//  SOFTWARE.
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
 //
 
 import AppKit
@@ -30,14 +29,14 @@ import Foundation
 
 // A target instance for a menu item that handles enabling/state updates/title updates etc.
 //
-// Created and attached to the NSMenuItem's representedObject 
+// Created and attached to the NSMenuItem's representedObject
 class MenuItemTarget: NSObject, NSMenuItemValidation {
 	weak var menuItem: NSMenuItem?
 
 	// Set the action callback
 	var action: (() -> Void)? {
 		didSet {
-			if action != nil {
+			if self.action != nil {
 				self.menuItem?.action = #selector(self.performAction(_:))
 			}
 			else {
@@ -52,6 +51,7 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 	var stateCallback: (() -> NSControl.StateValue)?
 	// The callback to determine the menu's title.
 	var titleCallback: (() -> String)?
+	// Callback for the attributed string
 	var attributedTitleCallback: (() -> NSAttributedString)?
 
 	// If the menu item is a view
@@ -63,13 +63,20 @@ class MenuItemTarget: NSObject, NSMenuItemValidation {
 		self.menuItem?.target = self
 	}
 
-//	deinit {
-//		Swift.print("MenuItemTarget deinit")
-//	}
+	deinit {
+		// Swift.print("MenuItemTarget deinit")
+
+		// Make sure we don't hold onto anything
+		self.isEnabledCallback = nil
+		self.stateCallback = nil
+		self.titleCallback = nil
+		self.attributedTitleCallback = nil
+		self.viewController = nil
+		self.action = nil
+	}
 
 	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 		if self.menuItem === menuItem {
-
 			let viewProtocol = self.viewController as? ViewControllerMenuActions
 
 			// Update the title if a callback is provided
