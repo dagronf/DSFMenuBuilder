@@ -97,14 +97,14 @@ A standard menu item, providing
 * setting the basic image (`.image()`)
 * setting the state images (`.stateImage()`)
 
-### MenuCollection
+### MenuItemCollection
 
-The `MenuCollection` menu item is a mechanism for creating a menu item for each 'object' in a collection of objects.
-For example, you might have a collection of names to add to a menu, you can use a `MenuCollection` object
+The `MenuItemCollection` menu item is a mechanism for creating a menu item for each 'object' in a collection of objects.
+For example, you might have a collection of names to add to a menu, you can use a `MenuItemCollection` object
 to iterate over the collection and generate a series of menu items for each collection item.
 
 ```swift
- MenuCollection(1...4) { [weak self] item in
+ MenuItemCollection(1...4) { [weak self] item in
     MenuItem("Item \(item)")
        .tag(item)
        .onAction {
