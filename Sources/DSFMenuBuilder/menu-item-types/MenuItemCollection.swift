@@ -1,5 +1,5 @@
 //
-//  MenuCollection.swift
+//  MenuItemCollection.swift
 //
 //  Copyright © 2022 Darren Ford. All rights reserved.
 //
@@ -33,7 +33,7 @@ import Foundation
 ///
 /// ```swift
 /// let menu = Menu {
-///    MenuCollection(1...4) { item in
+///    MenuItemCollection(1...4) { item in
 ///       MenuItem("Item \(item)")
 ///          .tag(item)
 ///          .onAction {
@@ -43,7 +43,7 @@ import Foundation
 ///    }
 /// }
 /// ```
-public class MenuCollection: AnyMenuItem {
+public class MenuItemCollection: AnyMenuItem {
 	internal let items: [AnyMenuItem]
 	/// Create a menu collection item
 	/// - Parameters:

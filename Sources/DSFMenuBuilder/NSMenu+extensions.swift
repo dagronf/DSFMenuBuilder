@@ -65,7 +65,7 @@ public struct NSMenuBuilder {
 		var results: [NSMenuItem] = []
 		components.forEach { menuItem in
 			let result = menuItem.item
-			if let with = menuItem as? MenuCollection {
+			if let with = menuItem as? MenuItemCollection {
 				results.append(contentsOf: with.items.map { $0.item })
 			}
 			else {

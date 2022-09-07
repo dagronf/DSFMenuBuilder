@@ -82,7 +82,7 @@ public struct MenuBuilder {
 		var result: [AnyMenuItem] = []
 
 		items.forEach {
-			if let a = $0 as? MenuCollection {
+			if let a = $0 as? MenuItemCollection {
 				result.append(contentsOf: a.items)
 			}
 			else {

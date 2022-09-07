@@ -31,7 +31,7 @@ final class DSFMenuBuilderTests: XCTestCase {
 		do {
 			let menu = NSMenu {
 				Separator()
-				MenuCollection(collection) { item in
+				MenuItemCollection(collection) { item in
 					MenuItem("Fred \(item)")
 						.onAction {
 							Swift.print("\(item)")
@@ -53,7 +53,7 @@ final class DSFMenuBuilderTests: XCTestCase {
 	func testMenuCollectionWithNonArrayType() throws {
 		do {
 			let menu = Menu {
-				MenuCollection(1...4) { item in
+				MenuItemCollection(1...4) { item in
 					MenuItem("Item \(item)")
 						.tag(item)
 						.onAction {
@@ -100,7 +100,7 @@ final class DSFMenuBuilderTests: XCTestCase {
 			]
 
 			let menu = NSMenu {
-				MenuCollection(items) { item in
+				MenuItemCollection(items) { item in
 					MenuItem(item.name)
 						.tag(item.tag)
 						.onAction {
