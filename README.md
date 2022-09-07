@@ -99,7 +99,7 @@ A standard menu item, providing
 
 ### MenuCollection
 
-The `MenuCollection` menu item is a mechanism for repeating a menu item for a collection of items.
+The `MenuCollection` menu item is a mechanism for creating a menu item for each 'object' in a collection of objects.
 For example, you might have a collection of names to add to a menu, you can use a `MenuCollection` object
 to iterate over the collection and generate a series of menu items for each collection item.
 
