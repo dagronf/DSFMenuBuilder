@@ -59,6 +59,30 @@ public extension NSMenu {
 	}
 }
 
+#if swift(<5.4)
+@_functionBuilder
+public struct NSMenuBuilder {
+	public static func buildBlock(_ components: AnyMenuItem...) -> [NSMenuItem] {
+		var results: [NSMenuItem] = []
+		components.forEach { menuItem in
+			let result = menuItem.item
+			if let with = menuItem as? MenuItemCollection {
+				results.append(contentsOf: with.items.map { $0.item })
+			}
+			else {
+				results.append(menuItem.item)
+			}
+
+			if let sub = menuItem as? MenuItem,
+				let subMenu = sub.subMenu
+			{
+				result.submenu = subMenu.build()
+			}
+		}
+		return results
+	}
+}
+#else
 @resultBuilder
 public struct NSMenuBuilder {
 	public static func buildBlock(_ components: AnyMenuItem...) -> [NSMenuItem] {
@@ -81,3 +105,4 @@ public struct NSMenuBuilder {
 		return results
 	}
 }
+#endif

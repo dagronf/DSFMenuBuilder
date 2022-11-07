@@ -42,23 +42,23 @@ public class Menu {
 	public init(@MenuBuilder builder: () -> [AnyMenuItem]) {
 		self.menuItems = builder()
 	}
-
+	
 	/// Create a Menu object using the specified menu items
 	public init(content: [AnyMenuItem]) {
 		self.menuItems = content
 	}
-
+	
 	/// Generate an NSMenu representation of the Menu structure
 	public var menu: NSMenu {
 		return self.build()
 	}
-
-//	deinit {
-//		Swift.print("Menu: deinit")
-//	}
-
+	
+	//	deinit {
+	//		Swift.print("Menu: deinit")
+	//	}
+	
 	// Private
-
+	
 	internal var menuItems: [AnyMenuItem] = []
 }
 
@@ -68,7 +68,7 @@ internal extension Menu {
 		self.menuItems.forEach { item in
 			menu.addItem(item.item)
 			if let sub = item as? MenuItem,
-			   let subMenu = sub.subMenu
+				let subMenu = sub.subMenu
 			{
 				let sm = subMenu.build()
 				item.item.submenu = sm
@@ -79,12 +79,13 @@ internal extension Menu {
 }
 
 /// A menu builder object
-@resultBuilder
+#if swift(<5.4)
+@_functionBuilder
 public struct MenuBuilder {
 	public static func buildBlock(_ components: AnyMenuItem...) -> [AnyMenuItem] {
 		let items = components.map { $0 }
 		var result: [AnyMenuItem] = []
-
+		
 		items.forEach {
 			if let a = $0 as? MenuItemCollection {
 				result.append(contentsOf: a.items)
@@ -93,7 +94,27 @@ public struct MenuBuilder {
 				result.append($0)
 			}
 		}
-
+		
 		return result
 	}
 }
+#else
+@resultBuilder
+public struct MenuBuilder {
+	public static func buildBlock(_ components: AnyMenuItem...) -> [AnyMenuItem] {
+		let items = components.map { $0 }
+		var result: [AnyMenuItem] = []
+		
+		items.forEach {
+			if let a = $0 as? MenuItemCollection {
+				result.append(contentsOf: a.items)
+			}
+			else {
+				result.append($0)
+			}
+		}
+		
+		return result
+	}
+}
+#endif
