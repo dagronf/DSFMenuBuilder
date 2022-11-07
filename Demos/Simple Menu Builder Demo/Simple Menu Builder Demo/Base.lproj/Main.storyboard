@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="21223" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21223"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -720,8 +720,8 @@
                                     <action selector="performClick:" target="XfG-lQ-9wD" id="b8k-e6-Drs"/>
                                 </connections>
                             </button>
-                            <popUpButton verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WkO-w2-dy9">
-                                <rect key="frame" x="120" y="226" width="162" height="25"/>
+                            <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WkO-w2-dy9">
+                                <rect key="frame" x="120" y="226" width="78" height="25"/>
                                 <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="XH0-Pa-tO5" id="BD3-nR-l2h">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
@@ -746,7 +746,7 @@
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <size key="minSize" width="425" height="190"/>
-                                            <size key="maxSize" width="425" height="10000000"/>
+                                            <size key="maxSize" width="440" height="10000000"/>
                                             <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                         </textView>
                                     </subviews>
@@ -760,6 +760,16 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6kx-6h-QFN">
+                                <rect key="frame" x="207" y="223" width="133" height="32"/>
+                                <buttonCell key="cell" type="push" title="Menu Collection" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="F2E-F0-6DU">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="showMenuCollectionItem:" target="XfG-lQ-9wD" id="5f7-YV-p2b"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="Z1V-c8-yCN" secondAttribute="bottom" constant="20" symbolic="YES" id="3yF-Mz-5HV"/>
@@ -770,6 +780,8 @@
                             <constraint firstItem="Z1V-c8-yCN" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="kzw-qD-TaZ"/>
                             <constraint firstItem="hzv-JL-IiR" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="l37-fk-PaO"/>
                             <constraint firstItem="hzv-JL-IiR" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="oaa-f1-klU"/>
+                            <constraint firstItem="6kx-6h-QFN" firstAttribute="centerY" secondItem="WkO-w2-dy9" secondAttribute="centerY" id="p9k-F6-YK8"/>
+                            <constraint firstItem="6kx-6h-QFN" firstAttribute="leading" secondItem="WkO-w2-dy9" secondAttribute="trailing" constant="20" id="qxZ-sW-D2m"/>
                         </constraints>
                     </view>
                     <connections>

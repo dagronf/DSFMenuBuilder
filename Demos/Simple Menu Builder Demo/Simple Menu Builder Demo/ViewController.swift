@@ -226,6 +226,39 @@ class ViewController: NSViewController {
 			in: sender
 		)
 	}
+
+	struct ItemType {
+		let name: String
+		let tag: Int
+	}
+
+	@IBAction func showMenuCollectionItem(_ sender: NSButton) {
+
+		let items = [
+			ItemType(name: "one", tag: 111),
+			ItemType(name: "two", tag: 222),
+			ItemType(name: "three", tag: 333),
+			ItemType(name: "fourth item", tag: 444)
+		]
+
+		let menu = NSMenu {
+			MenuItemCollection(items) { item in
+				MenuItem(item.name)
+					.tag(item.tag)
+					.onAction { [weak self] in
+						self?.writeOutput("Selected \(item.name), tag = \(item.tag)")
+					}
+			}
+			Separator()
+		}
+
+		menu.popUp(
+			positioning: nil,
+			at: .init(x: sender.bounds.minX, y: sender.bounds.maxY),
+			in: sender
+		)
+	}
+
 }
 
 extension NSControl.StateValue {

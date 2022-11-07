@@ -53,6 +53,10 @@ public class Menu {
 		return self.build()
 	}
 
+//	deinit {
+//		Swift.print("Menu: deinit")
+//	}
+
 	// Private
 
 	internal var menuItems: [AnyMenuItem] = []

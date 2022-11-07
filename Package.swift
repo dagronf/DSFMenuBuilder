@@ -1,5 +1,4 @@
 // swift-tools-version:5.3
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
@@ -9,18 +8,9 @@ let package = Package(
 		.macOS(.v10_11),
 	],
 	products: [
-		.library(
-			name: "DSFMenuBuilder",
-			type: .static,
-			targets: ["DSFMenuBuilder"]
-		),
-		.library(
-			name: "DSFMenuBuilderDynamic",
-			type: .dynamic,
-			targets: ["DSFMenuBuilder"]
-		),
-	],
-	dependencies: [
+		.library(name: "DSFMenuBuilder", targets: ["DSFMenuBuilder"]),
+		.library(name: "DSFMenuBuilder-static", type: .static, targets: ["DSFMenuBuilder"]),
+		.library(name: "DSFMenuBuilder-shared", type: .dynamic, targets: ["DSFMenuBuilder"]),
 	],
 	targets: [
 		.target(

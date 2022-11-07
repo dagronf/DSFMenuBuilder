@@ -60,4 +60,8 @@ public class MenuItemCollection: AnyMenuItem {
 		self.items = results
 		super.init(item: NSMenuItem())
 	}
+
+//	deinit {
+//		Swift.print("MenuItemCollection: deinit")
+//	}
 }
